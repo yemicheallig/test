@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9f5db;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #006d77;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #005f73;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: #0a9396;
+        }
+
+        .container {
+            flex: 1;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .dashboard {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .dashboard button {
+            margin-top: 1rem;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            background-color: #006d77;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .dashboard button:hover {
+            background-color: #0a9396;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #006d77;
+            color: white;
+        }
+
+        .welcome-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .welcome-container h2 {
+            margin-bottom: 1rem;
+        }
+
+        .welcome-container button {
+            padding: 0.7rem 1.5rem;
+            background-color: #006d77;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .welcome-container button:hover {
+            background-color: #0a9396;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .modal-content button {
+            padding: 0.5rem 1rem;
+            background-color: #006d77;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #0a9396;
+        }
+
+        .close-modal {
+            margin-top: 1rem;
+            color: #006d77;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .profile-container {
+            display: flex;
+            padding: 2rem;
+            justify-content: space-between;
+        }
+
+        .profile-section {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            width: 48%;
+        }
+
+        .profile-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .profile-section p {
+            margin-bottom: 0.5rem;
+        }
+
+        #child-details {
+            margin-top: 2rem;
+            background-color: #f3f3f3;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .record-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background-color: #006d77;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .record-button:hover {
+            background-color: #0a9396;
+        }
+
+        .new-record {
+            background-color: red;
+        }
+
+        .message {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .student-list,
+        .teacher-profile {
+            margin-top: 2rem;
+        }
+
+        .student-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .student-list th,
+        .student-list td {
+            padding: 1rem;
+            border: 1px solid #ccc;
+        }
+
+        .student-list th {
+            background-color: #f4f4f4;
+        }
+
+        .student-list td {
+            text-align: center;
+        }
+
+        .school-dashboard {
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .school-dashboard button {
+            margin-bottom: 1rem;
+        }
+
+        .administrative-tasks {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            margin-bottom: 2rem;
+        }
+
+        .school-reports {
+            margin-top: 1.5rem;
+        }
+
+        .school-reports table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .school-reports th,
+        .school-reports td {
+            padding: 1rem;
+            border: 1px solid #ccc;
+        }
+
+        .school-reports th {
+            background-color: #f4f4f4;
+        }
+
+        .school-reports td {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>KNOW YOUR CHILD</h1>
+        <p>School Management System</p>
+    </header>
+
+    <div class="container">
+        <section id="login-section" class="dashboard">
+            <h2>Login or Create Account</h2>
+            <p>Choose the dashboard you want to log into:</p>
+            <button onclick="openModal('parent')">Parent Dashboard</button>
+            <button onclick="openModal('teacher')">Teacher Dashboard</button>
+            <button onclick="openModal('school')">School Dashboard</button>
+        </section>
+    </div>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Login or Create Account</h3>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="submitCreateAccount()">Create Account</button>
+            <div class="close-modal" onclick="closeModal()">Close</div>
+        </div>
+    </div>
+
+    <div id="welcome-page" class="welcome-container" style="display:none;">
+        <h2>Welcome, <span id="user-name"></span>!</h2>
+        <button onclick="goToDashboard()">Next</button>
+    </div>
+
+    <div id="parent-dashboard" style="display:none;">
+        <div class="profile-container">
+            <div class="profile-section" id="parent-profile">
+                <h3>Parent Profile</h3>
+                <p><strong>Name: Abebe Teka </strong> <span id="parent-name"></span></p>
+                <p><strong>Email: AbebeTeka@gmail.com</strong> <span id="parent-email"></span></p>
+                <p><strong>Phone:+2456719734</strong> <span id="parent-phone"></span></p>
+            </div>
+            <div class="profile-section" id="children-profile">
+                <h3>Children's Profile</h3>
+                <form id="child-form">
+                    <input type="text" id="student-name" placeholder="Child's Name">
+                    <input type="text" id="school-name" placeholder="School Name">
+                    <input type="number" id="age" placeholder="Age">
+                    <select id="sex">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="email" id="student-email" placeholder="Child's Email">
+                    <input type="text" id="relationship" placeholder="Relationship with Parent">
+                    <button type="button" onclick="saveChildProfile()">Save Child Profile</button>
+                </form>
+                <button onclick="showChildDetails()">See Details About Your Child</button>
+            </div>
+        </div>
+
+        <div id="child-details" style="display:none;">
+            <h3>Details Recorded by the Teacher:</h3>
+            <button class="record-button" onclick="showMessage('keep-it-going')">Grades and Academic
+                Performance</button>
+            <button class="record-button" onclick="showMessage('keep-it-going')">Behavior and Participation in
+                Class</button>
+            <button class="record-button" onclick="showMessage('keep-it-going')">Attendance Records</button>
+            <button class="record-button new-record" onclick="showMessage('manage-time')">Health and Medical
+                Information</button>
+            <button class="record-button" onclick="showMessage('keep-it-going')">Extra-Curricular Activities
+                Involvement</button>
+            <button class="record-button" onclick="showMessage('keep-it-going')">Disciplinary Actions (if any)</button>
+            <button class="record-button new-record" onclick="showMessage('manage-time')">Teacher's Notes or
+                Observations</button>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <div id="teacher-dashboard" style="display:none;">
+        <div class="profile-container">
+            <button class="dashboard" onclick="showTeacherProfile()">My Profile</button>
+            <button class="dashboard" onclick="showStudentList()">List of My Students</button>
+        </div>
+
+        <div id="teacher-profile" class="teacher-profile" style="display:none;">
+            <h3>Teacher Profile</h3>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Age:</strong> 30</p>
+            <p><strong>Sex:</strong> Male</p>
+            <p><strong>Subject:</strong> Mathematics</p>
+            <p><strong>Email:</strong> johndoe@email.com</p>
+        </div>
+
+        <div id="student-list" class="student-list" style="display:none;">
+            <h3>List of My Students</h3>
+            <table>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Grade (%)</th>
+                    <th>Parent Contact</th>
+                </tr>
+                <tr>
+                    <td>Student 1</td>
+                    <td>85%</td>
+                    <td>parent1@email.com</td>
+                </tr>
+                <tr>
+                    <td>Student 2</td>
+                    <td>92%</td>
+                    <td>parent2@email.com</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="school-dashboard" style="display:none;">
+        <div class="school-dashboard">
+            <h3>Administrative Tasks</h3>
+            <button class="administrative-tasks">View Reports</button>
+            <button class="administrative-tasks">Add New Teacher</button>
+            <button class="administrative-tasks">Manage Students</button>
+            <button class="administrative-tasks">Generate Attendance Reports</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 School Management System. Credited to Hdassie Kerga.</p>
+    </footer>
+
+    <script>
+        function openModal(userType) {
+            document.getElementById('login-modal').style.display = 'flex';
+            document.getElementById('modal-title').innerText = `Login to ${capitalizeFirstLetter(userType)} Dashboard`;
+        }
+
+        function closeModal() {
+            document.getElementById('login-modal').style.display = 'none';
+        }
+
+        function submitCreateAccount() {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+
+            if (username && password) {
+                document.getElementById('welcome-page').style.display = 'block';
+                document.getElementById('user-name').innerText = username;
+                closeModal();
+            }
+        }
+
+        function goToDashboard() {
+            let userType = document.getElementById('modal-title').innerText.split(' ')[2].toLowerCase();
+            if (userType === 'parent') {
+                document.getElementById('parent-dashboard').style.display = 'block';
+            } else if (userType === 'teacher') {
+                document.getElementById('teacher-dashboard').style.display = 'block';
+            } else {
+                document.getElementById('school-dashboard').style.display = 'block';
+            }
+            document.getElementById('welcome-page').style.display = 'none';
+        }
+
+        function capitalizeFirstLetter(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function saveChildProfile() {
+            let studentName = document.getElementById('student-name').value;
+            let schoolName = document.getElementById('school-name').value;
+            let age = document.getElementById('age').value;
+            let sex = document.getElementById('sex').value;
+            let studentEmail = document.getElementById('student-email').value;
+            let relationship = document.getElementById('relationship').value;
+
+            if (studentName && schoolName && age && sex && studentEmail && relationship) {
+                alert('Child Profile Saved!');
+            } else {
+                alert('Please fill all the fields.');
+            }
+        }
+
+        function showChildDetails() {
+            document.getElementById('child-details').style.display = 'block';
+        }
+
+        function showMessage(message) {
+            document.getElementById('message').innerText = message;
+        }
+
+        function showTeacherProfile() {
+            document.getElementById('teacher-profile').style.display = 'block';
+            document.getElementById('student-list').style.display = 'none';
+        }
+
+        function showStudentList() {
+            document.getElementById('teacher-profile').style.display = 'none';
+            document.getElementById('student-list').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
